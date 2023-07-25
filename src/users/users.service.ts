@@ -1,8 +1,11 @@
 import * as uuid from 'uuid';
 import { Injectable } from '@nestjs/common';
+import { EmailService } from 'src/email/email.service';
 
 @Injectable()
 export class UsersService {
+  constructor(private emailService: EmailService) {}
+
   async createUser(name: string, email: string, password: string) {
     await this.checkUserExists(email);
 
@@ -25,5 +28,10 @@ export class UsersService {
     return;
   }
 
-  private async sendMemberJoinEmail(email: string, signupVerifyToken: string) {}
+  private async sendMemberJoinEmail(email: string, signupVerifyToken: string) {
+    await this.emailService.sendMemberJoinVerification(
+      email,
+      signupVerifyToken,
+    );
+  }
 }
